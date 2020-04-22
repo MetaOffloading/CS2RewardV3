@@ -1,5 +1,6 @@
 package com.sam.webtasks.iotask2;
 
+import java.text.DecimalFormat;
 import java.util.Date;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -14,12 +15,16 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.sam.webtasks.basictools.Counterbalance;
-import com.sam.webtasks.basictools.Names;
 import com.sam.webtasks.basictools.PHP;
+import com.sam.webtasks.basictools.ProgressBar;
+import com.sam.webtasks.client.Names;
 import com.sam.webtasks.client.SequenceHandler;
 
 public class IOtask2PreTrial {
 	public static void Run() {
+		if (IOtask2BlockContext.getUpdateProgress()) {
+			ProgressBar.SetProgress(IOtask2BlockContext.getTrialNum(), IOtask2BlockContext.getnTrials());
+		}
 		
 		final Date instructionStart = new Date();
 		
@@ -32,10 +37,33 @@ public class IOtask2PreTrial {
 		final VerticalPanel verticalPanel = new VerticalPanel();
 		final HorizontalPanel buttonPanel = new HorizontalPanel();
 		String displayString = "";
-
-		if (IOtask2BlockContext.showPoints()) {
+		
+		if (Counterbalance.getFactorLevel("rewardGroup") == 0) {
 			displayString = displayString + "You have scored a total of " + IOtask2BlockContext.getTotalPoints()
-					+ " points so far.<br><br>";
+			+ " points so far <br><br>";	
+		} else {
+			if (IOtask2BlockContext.showPoints()) {
+		}
+			int nPoints = IOtask2BlockContext.getTotalPoints();
+			
+			double dollarTotal = (((double) nPoints) / 250) + 2.50;
+
+			int nCents = (int) (dollarTotal * 100);
+			
+			int nWholeDollars = nCents / 100;
+			int nCentsLeftOver = nCents % 100;
+			
+			String dollarString = "$" + nWholeDollars + ".";
+			
+			if (nCentsLeftOver<10) {
+				dollarString = dollarString + "0" + nCentsLeftOver;
+			} else {
+				dollarString = dollarString + nCentsLeftOver;
+			}
+			
+			displayString = displayString + "You have scored a total of " + IOtask2BlockContext.getTotalPoints()
+					+ " points so far<br><br>" + "You have earned a total of " + IOtask2BlockContext.dollarTotal()
+					+ "<br><br>";
 		}
 
 		int points = IOtask2BlockContext.currentTargetValue();
@@ -168,3 +196,5 @@ public class IOtask2PreTrial {
 		});
 	}
 }
+
+

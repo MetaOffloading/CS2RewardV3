@@ -3,7 +3,7 @@ package com.sam.webtasks.iotask1;
 import java.util.Date;
 
 import com.google.gwt.user.client.Window;
-import com.sam.webtasks.basictools.Names;
+import com.sam.webtasks.client.Names;
 
 public class IOtask1BlockContext {
 	private static IOtask1Block blockContext;

@@ -11,7 +11,7 @@ public class CheckIdExists {
 		if (SessionInfo.localTesting) {
 			SequenceHandler.Next();
 		} else {
-			if ((SessionInfo.participantID.startsWith("A")) || (SessionInfo.experimentType != Names.EXPERIMENT_MTURK)) {
+			if (SessionInfo.participantID.startsWith("A")) {
 				SequenceHandler.Next();
 			} else {
 				RootPanel.get().clear();

@@ -1,15 +1,8 @@
 package com.sam.webtasks.basictools;
 
-import java.util.ArrayList;
-
-import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.TextBox;
 import com.sam.webtasks.client.SequenceHandler;
 import com.sam.webtasks.client.SessionInfo;
 
@@ -19,9 +12,7 @@ public class Initialise {
 			Window.alert("Set to local testing mode. Data will not be stored on server.");
 		}
 		
-		if (SessionInfo.experimentType == Names.EXPERIMENT_MTURK) {
-			RootPanel.get().add(new Label("initalising..."));
-		}
+		RootPanel.get().add(new Label("initalising..."));
 		
 		//set timestamp for the beginning of the experiment
 		TimeStamp.Start();
@@ -39,76 +30,15 @@ public class Initialise {
 		//generate a reward code, which can be used to claim payment at end
 		RewardCode.Generate();
 
-		if (SessionInfo.experimentType == Names.EXPERIMENT_STANDALONE) {
-			HTML participantHTML = new HTML("Experiment: " + SessionInfo.experimentCode + ", Version: " + SessionInfo.experimentVersion + 
-					"<br>Participant code:");
-			final TextBox textBox = new TextBox();
-			Button continueButton = new Button("Continue");
-			
-			RootPanel.get().add(participantHTML);
-			RootPanel.get().add(textBox);
-			RootPanel.get().add(continueButton);
-			
-			continueButton.addClickHandler(new ClickHandler() {
-				public void onClick(ClickEvent event) {
-					if (textBox.getText().length() > 0) {
-						SessionInfo.participantID = textBox.getText();
-						
-						//set up counterbalancing
-						
-						//first, check for any factors that should be fully (and reproducibly) counterbalanced, according to participant code
-						
-						//here, we calculate the number of unique counterbalancing cells for these levels.
-						int nCells = 1;
-						ArrayList<Integer> fullMax = new ArrayList<Integer>(); //maximum level for factors that will be counterbalanced fully
-						
-						for (int i = 0; i < SessionInfo.counterbalanceFactors.length; i++) {
-							if (SessionInfo.specifiedLevels[i] == -2) {
-								fullMax.add(SessionInfo.counterbalanceLevels[i]);
-								nCells = nCells * SessionInfo.counterbalanceLevels[i];
-							}
-						}
-						
-						//now we assign this participant to a cell, based on their participant code
-						final int ID = Integer.parseInt(SessionInfo.participantID);
-						int cell = ID % nCells;
-						
-						//now set factor levels, according to this code
-						ArrayList<Integer> fullLevel = new ArrayList<Integer>();
-						
-						nCells /= SessionInfo.counterbalanceLevels[SessionInfo.counterbalanceLevels.length - 1];
-
-						for (int i = fullMax.size()-1; i >= 0; i--) {							
-							fullLevel.add(cell / nCells);
-	
-							cell -= nCells*(cell/nCells);
-							
-							if (i>0) {
-								nCells /= fullMax.get(i-1);
-							}
-						}
-									
-						//the code below actually sets up the factors, whether they are random, specified, or fully counterbalanced
-						for (int i = 0; i < SessionInfo.counterbalanceFactors.length; i++) {
-							if (SessionInfo.specifiedLevels[i]==-2) { //fully counterbalanced level
-								Counterbalance.addFactor(SessionInfo.counterbalanceFactors[i], SessionInfo.counterbalanceLevels[i], fullLevel.get(fullLevel.size()-1));
-								fullLevel.remove(fullLevel.size()-1);
-							} else if (SessionInfo.specifiedLevels[i]==-1) { //randomised level
-								Counterbalance.addFactor(SessionInfo.counterbalanceFactors[i], SessionInfo.counterbalanceLevels[i]);
-							} else { //specified level
-								Counterbalance.addFactor(SessionInfo.counterbalanceFactors[i], SessionInfo.counterbalanceLevels[i], SessionInfo.specifiedLevels[i]);
-							}
-						}
-						
-						
-						
-						SequenceHandler.Next();
-					}
-					
-				}
-			});
-		} else {
-			SequenceHandler.Next();
+		//set up counterbalancing
+		for (int i = 0; i < SessionInfo.counterbalanceFactors.length; i++) {
+			if (SessionInfo.specifiedLevels[i]==-1) {
+				Counterbalance.addFactor(SessionInfo.counterbalanceFactors[i], SessionInfo.counterbalanceLevels[i]);
+			} else {
+				Counterbalance.addFactor(SessionInfo.counterbalanceFactors[i], SessionInfo.counterbalanceLevels[i], SessionInfo.specifiedLevels[i]);
+			}
 		}
+		
+		SequenceHandler.Next();
 	}
 }

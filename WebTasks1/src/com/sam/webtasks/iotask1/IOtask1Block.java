@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.Date;
 
 import com.google.gwt.user.client.Random;
-import com.sam.webtasks.basictools.Names;
+import com.sam.webtasks.client.Names;
 import com.sam.webtasks.client.SequenceHandler;
 
 public class IOtask1Block {

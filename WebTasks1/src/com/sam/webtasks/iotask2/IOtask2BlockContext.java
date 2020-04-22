@@ -3,8 +3,7 @@ package com.sam.webtasks.iotask2;
 import java.util.Date;
 
 import com.google.gwt.user.client.Window;
-import com.sam.webtasks.basictools.Names;
-import com.sam.webtasks.client.Params;
+import com.sam.webtasks.client.Names;
 import com.sam.webtasks.client.SequenceHandler;
 
 public class IOtask2BlockContext {
@@ -22,15 +21,6 @@ public class IOtask2BlockContext {
 	public static void setClickedCircle(int clickedCircle) {
 		blockContext.clickedCircle = clickedCircle;
 	}
-	
-	// decrement the number of drags to a particular location allowed during the surprise memory test
-	public static void decrementSurpriseDrags(int side) {
-		blockContext.surpriseDrags[side]--;
-	}
-	
-	public static int getSurpriseDrags(int side) {
-		return(blockContext.surpriseDrags[side]);
-	}
 
 	public static int getClickedCircle() {
 		return (blockContext.clickedCircle);
@@ -44,53 +34,6 @@ public class IOtask2BlockContext {
 	// find out the current total number of points
 	public static int getTotalPoints() {
 		return (blockContext.totalPoints);
-	}
-	
-	public static boolean getShowPointLabels() {
-		return (blockContext.showPointLabels);
-	}
-	
-	// find out the amount of money earned
-	public static String getMoneyString() {
-		int nPoints = blockContext.totalPoints;
-		
-		int nPence = (int) Math.ceil( (float) (100*nPoints) / Params.pointsPerPound);
-		int nPounds = nPence / 100;
-		int nRemainderPence = nPence % 100;
-		
-		String money = "£" + nPounds + ".";
-		
-		if (nRemainderPence < 10) {
-			money = money + "0" + nRemainderPence;
-		} else {
-			money = money + nRemainderPence;
-		}
-		
-		return (money);
-	}
-	
-	// is the countdown timer running?
-	public static boolean countdownTimer() {
-		return (blockContext.countdownTimer);
-	}
-	
-	public static int countdownTime() {
-		return (blockContext.countdownTime);
-	}
-	
-	public static void setCountdownTime(int cTime) {
-		blockContext.countdownTime = cTime;
-	}
-	
-	public static void countdown() {
-		if (blockContext.countdownTime > 0) {
-			blockContext.countdownTime--;
-		}
-	}
-	
-	// are we logging drag data?
-	public static boolean getLogDragData() {
-		return (blockContext.logDragData);
 	}
 
 	// are we displaying points to participants?
@@ -113,6 +56,38 @@ public class IOtask2BlockContext {
 	public static int getTrialNum() {
 		return (blockContext.currentTrial);
 	}
+	
+	public static int getnTrials() {
+		return (blockContext.nTrials);
+	}
+	
+	public static String dollarTotal() {
+		int nPoints = blockContext.totalPoints;
+
+		String dollars = "$0.00";
+
+				if (IOtask2BlockContext.showPoints()) {
+					
+					double dollarTotal = (((double) nPoints) / 250) + 2.50;
+
+					int nCents = (int) (dollarTotal * 100);
+					
+					int nWholeDollars = nCents / 100;
+					int nCentsLeftOver = nCents % 100;
+					
+						dollars = "$" + nWholeDollars + ".";
+					
+					if (nCentsLeftOver<10) {
+						dollars = dollars + "0" + nCentsLeftOver;
+					} else {
+						dollars = dollars + nCentsLeftOver;
+					}
+					return dollars; }
+				return dollars;
+					
+
+				//return dollars; }
+		}
 
 	// use these methods to set and find out which is the next circle in the
 	// sequence
@@ -137,10 +112,6 @@ public class IOtask2BlockContext {
 	// offloading condition
 	public static int getOffloadCondition() {
 		return(blockContext.offloadCondition);
-	}
-	
-	public static boolean getMoveableStatus(int side) {
-		return(blockContext.moveableSides[side]);
 	}
 	
 	//instruction time
@@ -221,22 +192,7 @@ public class IOtask2BlockContext {
 	
 	public static void incrementHits() {
 		blockContext.nHits++;
-		
-		if (blockContext.scorePoints) {
-			if (blockContext.variablePoints) {
-				blockContext.totalPoints += blockContext.pointValues[blockContext.exitFlag];
-			} else {
-				blockContext.totalPoints += blockContext.actualPoints;
-			}
-		}
-	}
-	
-	public static void decrementPoints() {
-		if (blockContext.scorePoints) {
-			if (blockContext.variablePoints) {
-				blockContext.totalPoints -= 1;
-			}
-		}
+		blockContext.totalPoints += blockContext.actualPoints;
 	}
 	
 	//get target side - use this for checking target status
@@ -330,9 +286,5 @@ public class IOtask2BlockContext {
 
 	public static int getBackupReminderFlag() {
 		return (blockContext.backupReminderFlag);
-	}
-	
-	public static int getSurpriseTest() {
-		return (blockContext.surpriseTest);
 	}
 }

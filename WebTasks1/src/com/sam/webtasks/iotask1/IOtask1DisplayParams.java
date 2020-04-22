@@ -13,7 +13,4 @@ public class IOtask1DisplayParams {
 
 	//size of labels inside circles
 	public static int circleTextSize=20;
-	
-	//minimum pixel size
-	public static int minPixels=500;
 }

@@ -11,18 +11,7 @@ import com.sam.webtasks.basictools.ClickPage;
 public class IOtask1InitialiseTrial {
 	public static void Run() {
 		IOtask1Block block = IOtask1BlockContext.getContext();		
-		 
-		//reset the list of offloaded circles, so that offloading on one trial is not counted towards the next
-		block.notYetOffloaded.clear();
-		block.allOffloaded.clear();
-		 
-		//reset the targetCircles
-		block.targetCircles[0] = 0;
-		block.targetCircles[1] = -10;
-		block.targetCircles[2] = -10;
-		block.targetCircles[3] = -10;
-		block.targetCircles[4] = -10;
-				
+		
 		//set default exit
 		block.targetCircles[block.defaultExit] = -1;
 		

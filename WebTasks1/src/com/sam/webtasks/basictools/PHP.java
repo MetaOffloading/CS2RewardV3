@@ -7,6 +7,7 @@ import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
+import com.sam.webtasks.client.Names;
 import com.sam.webtasks.client.SequenceHandler;
 import com.sam.webtasks.client.SessionInfo;
 

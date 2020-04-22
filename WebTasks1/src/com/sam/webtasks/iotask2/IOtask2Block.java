@@ -6,8 +6,7 @@ import java.util.Collections;
 import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.Window;
 import com.sam.webtasks.basictools.Counterbalance;
-import com.sam.webtasks.basictools.Names;
-import com.sam.webtasks.client.Params;
+import com.sam.webtasks.client.Names;
 import com.sam.webtasks.client.SequenceHandler;
 
 public class IOtask2Block {
@@ -19,31 +18,18 @@ public class IOtask2Block {
 	// run a standard 17-trial block?
 	public boolean standard17block = false;
 	
-	// run a standard 13-trial block?
-	public boolean standard13block = false;
-		
-	// run a standard 9-trial block?
-	public boolean standard9block = false;
-	
-	// run just the choice trials without forced internal/external?
-	public boolean onlyChoiceTrials = false;
+	// update the progress bar with progress through the block?
+	public boolean updateProgress = false;
 
 	// number of circles visible on screen
 	public int nCircles = 6;
 
 	// total number of circles in one trial
 	public int totalCircles = 25;
-	
-	// update the progress bar with progress through the block? 
-	public boolean updateProgress = false;
 
 	// allow any circle to be moved? NB this will be overridden by participants'
 	// choice to use reminders or not, if this choice is presented
 	public int offloadCondition = Names.REMINDERS_OPTIONAL;
-	
-	// if offloadCondition is set to REMINDERS_VARIABLE, separately set whether
-	// circles that should go to bottom, left, right, and top are moveable
-	public boolean[] moveableSides = new boolean[4];
 
 	// what block number is this? useful to store alongside performance data
 	public int blockNum = 1;
@@ -56,11 +42,7 @@ public class IOtask2Block {
 	public boolean showTargetFeedback = true;
 
 	// should post-trial feedback be shown?
-	public boolean showPostTrialFeedback = false;
-	
-	// include a countdowntimer?
-	public boolean countdownTimer = false;
-	public int countdownTime = Params.countdownTime; //number of seconds to start clock at
+	public boolean showPostTrialFeedback = true;
 
 	// total number of targets to include
 	public int nTargets = 10;
@@ -70,14 +52,6 @@ public class IOtask2Block {
 
 	// target values
 	public ArrayList<Integer> targetValues = new ArrayList<Integer>();
-	
-	// do different target directions have variable numbers of points?
-	public boolean variablePoints = false;
-	
-	public int[] pointValues = new int[4];
-	
-	// how many circles can be dragged to each side during a surprise memory test?
-	public int[] surpriseDrags = new int[4];
 
 	// maximum number of points per target (i.e. in the no reminder condition)
 	public int maxPoints = 10;
@@ -87,25 +61,13 @@ public class IOtask2Block {
 
 	// total number of points scored so far
 	public int totalPoints = 0;
-	
-	// are points being scored in this block? can set to false for prac blocks
-	public boolean scorePoints = true;
 
 	// tell participants how many points they've scored at each PreTrial screen?
 	public boolean showPoints = true;
-	
-	//show point values on either side
-	public boolean showPointLabels = false;
-	
-	// tell points how many points they've scored as they perform the task?
-	public boolean showLivePoints = false;
 
 	// check whether the first circle has been double-clicked, if so a double-click
 	// on the final circle exits the task, to help speed up debugging
 	public boolean doubleClickFlag = false;
-	
-	// log drag end data?
-	public boolean logDragData = false;
 
 	// if a circle has been dragged out of the box, which side has it been dragged
 	// to?
@@ -118,102 +80,9 @@ public class IOtask2Block {
 	// task lockout as a penalty for reminders?
 	public boolean reminderLockout = false;
 	public int reminderLockoutTime = 2000; // duration of lockout in ms
-	
-	//what type of stimuli are inside the circles?
-	public int ongoingStimType = Names.ONGOING_STIM_NUMBERS;
 
 	// this method actually runs the block
 	public void Run() { 
-		if (standard9block) {
-			nTrials=9;
-			
-			// 9 trials is the standard number of trials for 2 of each forced condition
-			// plus 5 choice trials (2, 4, 5, 6, 8)
-
-			// first set up and shuffle the 9 choice values
-			ArrayList<Integer> choiceValues = new ArrayList<Integer>();
-
-			// add choice numbers
-			choiceValues.add(2);
-			choiceValues.add(4);
-			choiceValues.add(5);
-			choiceValues.add(6);
-			choiceValues.add(8);
-
-			// now shuffle
-			for (int i = 0; i < choiceValues.size(); i++) {
-				Collections.swap(choiceValues, i, Random.nextInt(choiceValues.size()));
-			}
-
-			// now set up the values corresponding to the forced internal / forced external
-			// conditions
-			int forcedA = 0; // begin with forced internal
-			int forcedB = 10; // then have forced external
-
-			if (Counterbalance.getFactorLevel("forcedOrder") == 1) { // depending on counterbalancing version,
-																		// switch these around
-				forcedA = 10;
-				forcedB = 0;
-			}
-
-			// now put the whole list of target values together
-			targetValues.add(choiceValues.get(0));
-			targetValues.add(forcedA);
-			targetValues.add(choiceValues.get(1));
-			targetValues.add(forcedB);
-			targetValues.add(choiceValues.get(2));
-			targetValues.add(forcedA);
-			targetValues.add(choiceValues.get(3));
-			targetValues.add(forcedB);
-			targetValues.add(choiceValues.get(4));
-		}
-		
-		if (standard13block) {
-			nTrials=13;
-			
-			// 17 trials is the standard number of trials for 4 of each forced condition
-			// plus 9 choice trials
-
-			// first set up and shuffle the 9 choice values
-			ArrayList<Integer> choiceValues = new ArrayList<Integer>();
-
-			// add numbers 2-8
-			for (int i = 2; i < 9; i++) {
-				choiceValues.add(i);
-			}
-
-			// now shuffle
-			for (int i = 0; i < choiceValues.size(); i++) {
-				Collections.swap(choiceValues, i, Random.nextInt(choiceValues.size()));
-			}
-
-			// now set up the values corresponding to the forced internal / forced external
-			// conditions
-			int forcedA = 0; // begin with forced internal
-			int forcedB = 10; // then have forced external
-
-			if (Counterbalance.getFactorLevel("forcedOrder") == 1) { // depending on counterbalancing version,
-																		// switch these around
-				forcedA = 10;
-				forcedB = 0;
-			}
-
-			// now put the whole list of target values together
-			targetValues.add(choiceValues.get(0));
-			targetValues.add(forcedA);
-			targetValues.add(choiceValues.get(1));
-			targetValues.add(forcedB);
-			targetValues.add(choiceValues.get(2));
-			targetValues.add(forcedA);
-			targetValues.add(choiceValues.get(3));
-			targetValues.add(forcedB);
-			targetValues.add(choiceValues.get(4));
-			targetValues.add(forcedA);
-			targetValues.add(choiceValues.get(5));
-			targetValues.add(forcedB);
-			targetValues.add(choiceValues.get(6));
-		}
-		
 		if (standard17block) {
 			nTrials=17;
 			
@@ -264,28 +133,6 @@ public class IOtask2Block {
 			targetValues.add(choiceValues.get(8));
 		}
 		
-		if (onlyChoiceTrials) {
-			nTrials=9;
-			
-			//first set up and shuffle the 9 choice values
-			ArrayList<Integer> choiceValues = new ArrayList<Integer>();
-
-			//add numbers 1-9
-			for (int i = 1; i < 10; i++) {
-				choiceValues.add(i);
-			}
-
-			//now shuffle
-			for (int i = 0; i < choiceValues.size(); i++) {
-				Collections.swap(choiceValues, i, Random.nextInt(choiceValues.size()));
-			}	
-			
-			//now add to list
-			for (int i = 0; i < choiceValues.size(); i++) {
-				targetValues.add(choiceValues.get(i));
-			}
-		}
-		
 		while (targetValues.size() < nTrials) { //if not enough target values have been set up
 			targetValues.add(-1);
 		}
@@ -329,12 +176,6 @@ public class IOtask2Block {
 	// flash flag. use this for timing the red flash if wrong circle is dragged to
 	// the bottom
 	public boolean flashFlag = false;
-	
-	// run a surprise memory test? set to the circle number after which the test will be given. set to a big number to prevent it happening
-	public int surpriseTest = 999;
-	
-	// use this to specify surprise tests across a block
-	public ArrayList<Integer> surpriseTests = new ArrayList<Integer>();
 
 	// ???????
 	public int completedCircles = 0;
@@ -342,6 +183,8 @@ public class IOtask2Block {
 	public int reminderCompletedCircles = -999;
 
 	public int checkExitFlag = 1;
+
+	public int pracTargets;
 
 	// TODO: forced offloading
 	// TODO: drag-by-drag data?

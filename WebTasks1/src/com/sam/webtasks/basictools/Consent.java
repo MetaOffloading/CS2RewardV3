@@ -14,6 +14,7 @@ import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.sam.webtasks.client.Names;
 import com.sam.webtasks.client.SessionInfo;
 import com.sam.webtasks.client.SequenceHandler;
 
@@ -29,12 +30,6 @@ public class Consent {
         final CheckBox box4 = new CheckBox("I understand that I am free to "
                 + "withdraw at any time, without giving a reason, and without "
                 + "incurring any penalty");
-        final CheckBox box5 = new CheckBox("I consent to the processing of my personal information "
-        		+ "for the purposes explained to me. I understand that such information will be "
-        		+ " handled in accordance with all applicable data protection legislation");        
-        final CheckBox box6 = new CheckBox("I agree that my anonymised research data may be used "
-                        + "by others for future research. I understand that no one will be able "
-                        + " to identify me when this data is shared");
 
         final VerticalPanel mainPanel = new VerticalPanel(); //contains all page elements
         final VerticalPanel screenPanel = new VerticalPanel();   //used to align elements to centre of screen
@@ -75,7 +70,7 @@ public class Consent {
 
         approvalHTML.setStyleName("bottomMarginSmall", true);
         approvalHTML.setHTML("This study has been approved by the UCL Research Ethics Committee "
-                + "as Project ID Number: 1584/003");
+                + "as Project ID Number: 1584/002");
 
         bodyHTML.setStyleName("bottomMarginSmall", true);
         bodyHTML.setHTML("Thank you for your interest in taking part in this research. If "
@@ -120,8 +115,6 @@ public class Consent {
         checkBoxPanel.add(box2);
         checkBoxPanel.add(box3);
         checkBoxPanel.add(box4);
-        checkBoxPanel.add(box5);
-        checkBoxPanel.add(box6);
 
         agePanel.add(ageBoxLabel);
         agePanel.add(ageBox);
@@ -203,14 +196,8 @@ public class Consent {
                 if (box4.getValue()) {
                     boxesTicked++;
                 }
-                if (box5.getValue()) {
-                    boxesTicked++;
-                }
-                if (box6.getValue()) {
-                    boxesTicked++;
-                }
 
-                if (boxesTicked + validAge + validGender == 8) {
+                if (boxesTicked + validAge + validGender == 6) {
                 	if (maleRadioButton.getValue()) {
                 		SessionInfo.gender=Names.GENDER_MALE;
                 	}
@@ -225,7 +212,7 @@ public class Consent {
                 	
                     SessionInfo.age = Integer.parseInt(ageBox.getText());
                 	
-                    String data=""+SessionInfo.gender+","+SessionInfo.age+","+Counterbalance.getCounterbalancingCell();
+                    String data=""+SessionInfo.gender+","+SessionInfo.age+","+Counterbalance.getFactorLevel("phase1reminders");
              
                     RootPanel.get().remove(screenPanel);
 
@@ -235,7 +222,7 @@ public class Consent {
                     	PHP.logData("participantInfo", data, true);
                     }
                 } else {
-                    if (boxesTicked < 6) {
+                    if (boxesTicked < 4) {
                         alertString = alertString + "You must tick all boxes to continue\n";
                     }
 
